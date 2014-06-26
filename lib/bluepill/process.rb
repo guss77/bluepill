@@ -173,8 +173,11 @@ module Bluepill
       @logger = logger
       self.watches.each {|w| w.logger = logger }
       self.triggers.each {|t| t.logger = logger }
+      def @logger.io(level)
+        Bluepill::Util::LoggerIO(@logger, level)
+      end
     end
-
+    
     # State machine methods
     def dispatch!(event, reason = nil)
       @event_mutex.synchronize do
