@@ -288,13 +288,20 @@ module Bluepill
       $stdin.reopen(io_in) if io_in
 
       if !io_out.nil? && !io_err.nil? && io_out == io_err
-        $stdout.reopen(io_out, APPEND_MODE)
+        reopen_io($stdout, io_out)
         $stderr.reopen($stdout)
 
       else
-        $stdout.reopen(io_out, APPEND_MODE) if io_out
-        $stderr.reopen(io_err, APPEND_MODE) if io_err
+        reopen_io($stdout, io_out) if io_out
+        reopen_io($stderr, io_err) if io_err
       end
     end
+    
+    def reopen_io(channel, destination)
+      if destination.is_a? IO
+        channel.reopen(destination)
+      else
+        channel.reopen(destination, APPEND_MODE)
+      end
   end
 end
